@@ -26,8 +26,12 @@ public class EnemyRed_Script : MonoBehaviour
 	public Transform shotSpawn;				//Where the Fire Spawn
 	public float fireRate = 0.5F;			//Fire Rate between Shots
 
+    public EnemyRed_Script myPrefab;
+
 	//Private Var
 	private float nextFire = 0.0F;			//First fire & Next fire Time
+    private bool IsChild = false;
+    private Vector3 targetSpawnPos;
 
 	// Use this for initialization
 	void Start ()
@@ -47,6 +51,12 @@ public class EnemyRed_Script : MonoBehaviour
 		}
 
         transform.Rotate(1, 0, 0);
+
+        if (IsChild && targetSpawnPos != null)
+        {
+            transform.position = GlobalMethods.Ease(this.transform.position, targetSpawnPos, 0.1f);
+        }
+
 	}
 
 	//Called when the Trigger entered
@@ -67,9 +77,32 @@ public class EnemyRed_Script : MonoBehaviour
 			{
 				Instantiate (Explosion, transform.position , transform.rotation); 		//Instantiate Explosion
 				SharedValues_Script.score +=ScoreValue;									//Increment score by ScoreValue
+
+                if (!this.IsChild)
+                {
+                    CreateChildren();
+                }
+
 				Destroy(gameObject);													//Destroy The Object (Enemy Ship)
 			}
 		}
 
 	}
+
+
+    public void CreateChildren()
+    {
+        EnemyRed_Script left = Instantiate(myPrefab, this.transform.position, this.transform.rotation);
+        left.IsChild = true;
+        left.targetSpawnPos = new Vector3(this.transform.position.x - 1f, this.transform.position.y);
+        left.health = 1;
+        left.transform.localScale -= new Vector3(0.5f, 0.5f);
+
+        EnemyRed_Script right = Instantiate(myPrefab, this.transform.position, this.transform.rotation);
+        right.IsChild = true;
+        right.targetSpawnPos = new Vector3(this.transform.position.x + 1f, this.transform.position.y);
+        right.health = 1;
+        right.transform.localScale -= new Vector3(0.5f, 0.5f);
+    }
+
 }

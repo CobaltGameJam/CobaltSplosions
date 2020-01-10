@@ -19,13 +19,15 @@ public class SharedValues_Script : MonoBehaviour
 	public GUIText scoreText; 				//GUI Score
     public GUIText timeText;
 	public GUIText GameOverText; 			//GUI GameOver
-	public GUIText FinalScoreText; 			//GUI Final Score
+	public GUIText BestScoreText; 			//GUI Final Score
+    public GUIText BestTimeText;
 	public GUIText ReplayText; 				//GUI Replay
 
 	//Public Shared Var
 	public static int score = 0; 			//Total in-game Score
 	public static bool gameover = false; 	//GameOver Trigger
     public static float startTime = 0.0f;
+    public float currentTime = 0.0f;
 
 	// Use this for initialization
 	void Start ()
@@ -39,13 +41,28 @@ public class SharedValues_Script : MonoBehaviour
 	void FixedUpdate ()
 	{
 		scoreText.text = "Score: " + score; 			//Update the GUI Score
-        timeText.text = $"Time: {(Time.time - startTime).ToString("0.0")}";
+
+        if (gameover != true)
+        {
+            currentTime = Time.time - startTime;
+            timeText.text = $"Time: {currentTime.ToString("0.0")}";
+
+            if (currentTime > GlobalStats_Script.Instance.BestTime)
+            {
+                GlobalStats_Script.Instance.BestTime = currentTime;
+            }
+            if (score > GlobalStats_Script.Instance.BestScore)
+            {
+                GlobalStats_Script.Instance.BestScore = score;
+            }
+        }
 
 		//Excute when the GameOver Trigger is True
 		if (gameover == true)
 		{
 			GameOverText.text = "GAME OVER"; 			//Show GUI GameOver
-			FinalScoreText.text = "" + score; 			//Show GUI FinalScore
+			BestScoreText.text = "Best Score: " + GlobalStats_Script.Instance.BestScore;           //Show GUI FinalScore
+            BestTimeText.text = "Best Time: " + GlobalStats_Script.Instance.BestTime.ToString("0.0"); 			//Show GUI FinalScore
 			ReplayText.text = "PRESS R TO REPLAY"; 		//Show GUI Replay
 		}
 	}

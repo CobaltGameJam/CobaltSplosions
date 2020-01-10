@@ -3,10 +3,10 @@
 /// By Bug Games www.Bug-Games.net
 /// Programmer: Danar Kayfi - Twitter: @DanarKayfi
 /// Special Thanks to Kenney for the CC0 Graphic Assets: www.kenney.nl
-/// 
+///
 /// This is the GameController Script:
 /// - Control The Waves of the asteroid and the enemies
-/// 
+///
 /// </summary>
 
 using UnityEngine;
@@ -14,7 +14,7 @@ using System.Collections;
 
 //Asteroid Properties
 [System.Serializable]
-public class Asteroid 
+public class Asteroid
 {
 	public GameObject asteroidBigObj; 		//Object Prefab
 	public int Count; 						//Number of the object in 1 wave
@@ -25,7 +25,7 @@ public class Asteroid
 
 //EnemyBlue Properties
 [System.Serializable]
-public class EnemyBlue 
+public class EnemyBlue
 {
 	public GameObject enemyBlueObj;			//Object Prefab
 	public int Count;						//Number of the object in 1 wave
@@ -36,7 +36,7 @@ public class EnemyBlue
 
 //EnemyGreen Properties
 [System.Serializable]
-public class EnemyGreen 
+public class EnemyGreen
 {
 	public GameObject enemyGreenObj;		//Object Prefab
 	public int Count;						//Number of the object in 1 wave
@@ -47,7 +47,7 @@ public class EnemyGreen
 
 //EnemyRed Properties
 [System.Serializable]
-public class EnemyRed 
+public class EnemyRed
 {
 	public GameObject enemyRedObj;		//Object Prefab
 	public int Count;					//Number of the object in 1 wave
@@ -57,8 +57,12 @@ public class EnemyRed
 }
 
 
-public class GameController_Script : MonoBehaviour 
-{	
+
+
+
+
+public class GameController_Script : MonoBehaviour
+{
 	//Public Var
 	public Asteroid asteroid;			//make an Object from Class asteroid
 	public EnemyBlue enemyBlue;			//make an Object from Class enemyBlue
@@ -76,7 +80,7 @@ public class GameController_Script : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update () 
+	void Update ()
 	{
 		//Excute when keyboard button R pressed
 		if(Input.GetKey("r"))
@@ -102,8 +106,9 @@ public class GameController_Script : MonoBehaviour
 				yield return new WaitForSeconds (asteroid.SpawnWait); 													//Wait for seconds before spawning the next object
 			}
 			yield return new WaitForSeconds (asteroid.WaveWait); 														//wait for seconds before the next wave
-            asteroid.Count = (int)(1.5f * asteroid.Count);
-            asteroid.SpawnWait = (int)(asteroid.SpawnWait/1.5f);
+            asteroid.Count = System.Math.Max((int)(1.2f * asteroid.Count), asteroid.Count + 1);
+            asteroid.SpawnWait = asteroid.SpawnWait * 0.92f;
+            asteroid.WaveWait = asteroid.WaveWait * 1.3f;
         }
 	}
 
@@ -124,8 +129,9 @@ public class GameController_Script : MonoBehaviour
 				yield return new WaitForSeconds (enemyBlue.SpawnWait);													//Wait for seconds before spawning the next object
 			}
 			yield return new WaitForSeconds (enemyBlue.WaveWait);														//wait for seconds before the next wave
-            enemyBlue.Count = (int)(1.65f * enemyBlue.Count);
-            enemyBlue.SpawnWait = (int)(enemyBlue.SpawnWait / 1.5f);
+            enemyBlue.Count = System.Math.Max((int)(1.2f * enemyBlue.Count), enemyBlue.Count + 1);
+            enemyBlue.SpawnWait = enemyBlue.SpawnWait * 0.92f;
+            enemyBlue.WaveWait = enemyBlue.WaveWait * 1.25f;
         }
 	}
 
@@ -146,8 +152,9 @@ public class GameController_Script : MonoBehaviour
 				yield return new WaitForSeconds (enemyGreen.SpawnWait);													//Wait for seconds before spawning the next object
 			}
 			yield return new WaitForSeconds (enemyGreen.WaveWait);														//wait for seconds before the next wave
-            enemyGreen.Count = (int)(1.5f * enemyGreen.Count);
-            enemyGreen.SpawnWait = (int)(enemyGreen.SpawnWait / 1.5f);
+            enemyGreen.Count = System.Math.Max((int)(1.35f * enemyGreen.Count), enemyGreen.Count + 1);
+            enemyGreen.SpawnWait = enemyGreen.SpawnWait * 0.92f;
+            enemyGreen.WaveWait = enemyGreen.WaveWait * 1.35f;
         }
 	}
 
@@ -168,9 +175,42 @@ public class GameController_Script : MonoBehaviour
 				yield return new WaitForSeconds (enemyRed.SpawnWait);													//Wait for seconds before spawning the next object
 			}
 			yield return new WaitForSeconds (enemyRed.WaveWait);														//wait for seconds before the next wave
-            enemyRed.Count = (int)(1.5f * enemyRed.Count);
-            enemyRed.SpawnWait = (int)(enemyRed.SpawnWait / 1.5f);
+            enemyRed.Count = System.Math.Max((int)(1.8f * enemyRed.Count), enemyRed.Count + 1);
+            enemyRed.SpawnWait = enemyRed.SpawnWait * 0.95f;
+            enemyRed.WaveWait = enemyRed.WaveWait * 1.45f;
         }
 	}
-		
+
+
+
+
+
 }
+
+
+public class GlobalMethods
+{
+    public static float Ease(float curVal, float targetVal, float speed)
+    {
+        return curVal + (targetVal - curVal) * speed;
+    }
+
+    public static int Ease(int curVal, int targetVal, float speed)
+    {
+        return (int)(curVal + (targetVal - curVal) * speed);
+    }
+
+    public static double Ease(double curVal, double targetVal, float speed)
+    {
+        return (double)(curVal + (targetVal - curVal) * speed);
+    }
+
+
+    public static Vector3 Ease(Vector3 curVal, Vector3 targetVal, float speed)
+    {
+        return (Vector3)(curVal + (targetVal - curVal) * speed);
+    }
+
+}
+
+
